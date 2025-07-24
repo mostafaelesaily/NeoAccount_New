@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeoAccount - الصفحة الرئيسية</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* التنسيقات العامة */
+      :root {
+        --primary-color: #ff6b00;
+        --primary-dark: #e05e00;
+        --text-color: #333333;
+        --light-gray: #f5f5f5;
+        --white: #ffffff;
+        --border-color: #e0e0e0;
+        --success-color: #4caf50;
+        --error-color: #f44336;
+      }
+
+      [data-theme="dark"] {
+        --text-color: #f5f5f5;
+        --light-gray: #333333;
+        --white: #222222;
+        --border-color: #444444;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Tajawal", sans-serif;
+      }
+
+      body {
+        background-color: var(--light-gray);
+        color: var(--text-color);
+        direction: rtl;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 70px auto 20px;
+        padding: 0 15px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+      }
+
+      /* الشريط العلوي */
+      .navbar {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 12px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 0 15px;
+      }
+
+      .logo {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 5px 8px;
+      }
+
+      .notification-icon {
+        position: relative;
+      }
+
+      /* القائمة المنسدلة */
+      .dropdown {
+        position: relative;
+      }
+
+      .dropbtn {
+        background-color: transparent;
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: var(--white);
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        border-radius: 5px;
+        right: 0;
+      }
+
+      .dropdown-content a {
+        color: var(--text-color);
+        padding: 10px 15px;
+        text-decoration: none;
+        display: block;
+        font-size: 0.9rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      /* تبديل الوضع */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 24px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--primary-color);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+
+      /* المحتوى الرئيسي */
+      .hero {
+        text-align: center;
+        padding: 20px 0;
+      }
+
+      .logo-text {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+      }
+
+      .subtitle {
+        color: var(--text-color);
+        font-size: 0.95rem;
+        opacity: 0.8;
+      }
+
+      /* بطاقات المميزات */
+      .features-cards {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin: 25px 0;
+      }
+
+      .feature-box {
+        background-color: var(--white);
+        padding: 15px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border-color);
+      }
+
+      .feature-box i {
+        font-size: 1.4rem;
+        color: var(--primary-color);
+      }
+
+      .feature-box h3 {
+        margin-bottom: 5px;
+        font-size: 1rem;
+      }
+
+      .feature-box p {
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      /* وضع التشغيل */
+      .mode-toggle {
+        background-color: var(--white);
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .mode-toggle h3 {
+        margin-bottom: 12px;
+      }
+
+      .mode-btn {
+        padding: 8px 20px;
+        border: 1px solid var(--primary-color);
+        background: transparent;
+        border-radius: 5px;
+        color: var(--primary-color);
+        margin: 0 5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .mode-btn.active,
+      .mode-btn:hover {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      /* التنبيهات */
+      .notifications-container {
+        background-color: var(--white);
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+      }
+
+      .notifications-list {
+        margin-top: 15px;
+      }
+
+      .notification-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 10px;
+        background-color: var(--light-gray);
+        border-radius: 8px;
+      }
+
+      .notification-item i {
+        margin-left: 10px;
+        color: var(--primary-color);
+      }
+
+      .notification-content p {
+        font-size: 0.9rem;
+      }
+
+      .notification-date {
+        font-size: 0.75rem;
+        color: #777;
+        margin-top: 3px;
+      }
+
+      /* التكيف مع الشاشات الكبيرة */
+      @media (min-width: 768px) {
+        .container {
+          padding: 0 20px;
+        }
+
+        .logo {
+          font-size: 1.5rem;
+        }
+
+        .nav-links a {
+          font-size: 1rem;
+        }
+
+        .features-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .logo-text {
+          font-size: 2.2rem;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .features-cards {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- الشريط العلوي -->
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="logo">NeoAccount</a>
+        <div class="nav-links">
+          <a href="account.html">حسابي</a>
+          <div class="dropdown">
+            <button class="dropbtn">
+              الخدمات <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="gas.html">دفع فاتورة الغاز</a>
+              <a href="electricity.html">دفع فاتورة الكهرباء</a>
+              <a href="internet.html">دفع فاتورة الإنترنت</a>
+              <a href="transfer.html">تحويل مبلغ</a>
+              <a href="save.html">هدف توفير</a>
+            </div>
+          </div>
+          <a href="notifications.html" class="notification-icon">
+            <i class="fas fa-bell"></i>
+          </a>
+          <div class="language-switch">عربي | EN</div>
+          <label class="switch">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </nav>
+
+    <!-- محتوى الصفحة -->
+    <main class="container">
+      <!-- الشعار والشرح -->
+      <section class="hero">
+        <h1 class="logo-text">NeoAccount</h1>
+        <p class="subtitle">حساب ذكي يساعدك كمستشار مالي شخصي.</p>
+      </section>
+
+      <!-- المميزات -->
+      <section class="features-cards">
+        <div class="feature-box">
+          <i class="fas fa-search"></i>
+          <div>
+            <h3>تحليل أموالك</h3>
+            <p>تحليل دخلك ومصروفاتك بشكل ذكي</p>
+          </div>
+        </div>
+        <div class="feature-box">
+          <i class="fas fa-bell"></i>
+          <div>
+            <h3>إدارة التنبيهات</h3>
+            <p>تلقي إشعارات بالمدفوعات القادمة</p>
+          </div>
+        </div>
+        <div class="feature-box">
+          <i class="fas fa-chart-line"></i>
+          <div>
+            <h3>استثمار الرصيد</h3>
+            <p>ابدأ استثمار الأموال غير المستخدمة</p>
+          </div>
+        </div>
+        <div class="feature-box">
+          <i class="fas fa-bullseye"></i>
+          <div>
+            <h3>أهداف مالية</h3>
+            <p>تابع أهدافك في الادخار وتقدمك</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- وضع التشغيل -->
+      <section class="mode-toggle">
+        <h3>وضع التشغيل:</h3>
+        <button class="mode-btn active" id="manual-btn">يدوي</button>
+        <button class="mode-btn" id="auto-btn">تلقائي</button>
+      </section>
+
+      <!-- قسم التنبيهات -->
+      <div class="notifications-container" id="notifications-container">
+        <h2><i class="fas fa-bell"></i> التنبيهات الأخيرة</h2>
+        <div id="notifications-list" class="notifications-list">
+          <!-- سيتم ملؤها بواسطة JavaScript -->
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+      // تفعيل عرض التنبيهات
+      function displayNotifications() {
+        const notifications = [
+          {
+            icon: "fas fa-info-circle",
+            text: "لديك فاتورة غاز غير مدفوعة تنتهي بعد 3 أيام",
+            date: "منذ ساعتين",
+          },
+          {
+            icon: "fas fa-check-circle",
+            text: "تم تحويل 500 ريال بنجاح إلى حساب أحمد",
+            date: "منذ يوم",
+          },
+          {
+            icon: "fas fa-piggy-bank",
+            text: "وصلت إلى 75% من هدف التوفير الشهري",
+            date: "منذ 3 أيام",
+          },
+        ];
+
+        const container = document.getElementById("notifications-list");
+
+        notifications.forEach((notif) => {
+          const item = document.createElement("div");
+          item.className = "notification-item";
+          item.innerHTML = `
+                    <i class="${notif.icon}"></i>
+                    <div class="notification-content">
+                        <p>${notif.text}</p>
+                        <div class="notification-date">${notif.date}</div>
+                    </div>
+                `;
+          container.appendChild(item);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        displayNotifications();
+
+        // زر الوضع اليدوي والتلقائي
+        const manualBtn = document.getElementById("manual-btn");
+        const autoBtn = document.getElementById("auto-btn");
+        const notifContainer = document.getElementById(
+          "notifications-container"
+        );
+
+        manualBtn.addEventListener("click", () => {
+          manualBtn.classList.add("active");
+          autoBtn.classList.remove("active");
+          notifContainer.style.display = "block";
+        });
+
+        autoBtn.addEventListener("click", () => {
+          autoBtn.classList.add("active");
+          manualBtn.classList.remove("active");
+          notifContainer.style.display = "none";
+        });
+
+        // تبديل الوضع الداكن
+        const themeToggle = document.getElementById("theme-toggle");
+        themeToggle.addEventListener("change", function () {
+          if (this.checked) {
+            document.documentElement.setAttribute("data-theme", "dark");
+          } else {
+            document.documentElement.removeAttribute("data-theme");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

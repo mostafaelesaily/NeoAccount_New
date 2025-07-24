@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeoAccount - دفع فاتورة الإنترنت</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="logo">NeoAccount</a>
+        <div class="nav-links">
+          <a href="account.html">حسابي</a>
+          <div class="dropdown">
+            <button class="dropbtn">
+              الخدمات <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="gas.html">دفع فاتورة الغاز</a>
+              <a href="electricity.html">دفع فاتورة الكهرباء</a>
+              <a href="internet.html" class="active">دفع فاتورة الإنترنت</a>
+              <a href="transfer.html">تحويل مبلغ</a>
+              <a href="save.html">هدف توفير</a>
+            </div>
+          </div>
+          <a href="notifications.html" class="notification-icon">
+            <i class="fas fa-bell"></i>
+          </a>
+          <div class="language-switch">عربي | EN</div>
+          <label class="switch">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <h1><i class="fas fa-wifi"></i> دفع فاتورة الإنترنت</h1>
+
+      <div class="service-form">
+        <form id="internet-payment-form">
+          <div class="form-group">
+            <label for="internet-provider">مزود الخدمة:</label>
+            <select id="internet-provider" required>
+              <option value="">اختر المزود</option>
+              <option value="stc">STC</option>
+              <option value="mobily">موبايلي</option>
+              <option value="zain">زين</option>
+              <option value="integrated">الشركة المتحدة</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="internet-account">رقم الاشتراك:</label>
+            <input
+              type="text"
+              id="internet-account"
+              placeholder="أدخل رقم الاشتراك"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="internet-amount">المبلغ (ر.س):</label>
+            <input
+              type="number"
+              id="internet-amount"
+              min="1"
+              placeholder="أدخل المبلغ"
+              required
+            />
+          </div>
+
+          <button type="submit" class="submit-btn">دفع الفاتورة</button>
+        </form>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        setupThemeToggle();
+
+        document
+          .getElementById("internet-payment-form")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const provider = document.getElementById("internet-provider").value;
+            const account = document.getElementById("internet-account").value;
+            const amount = parseFloat(
+              document.getElementById("internet-amount").value
+            );
+
+            if (deductFromBalance(amount)) {
+              addNotification(
+                `دفع فاتورة إنترنت لشركة ${getProviderName(
+                  provider
+                )} - ${amount} ر.س`,
+                "internet"
+              );
+              addTransaction(`دفع فاتورة إنترنت`, -amount, "withdrawal");
+              showSuccessToast(
+                `تم دفع فاتورة الإنترنت بنجاح بمبلغ ${amount} ر.س`
+              );
+              this.reset();
+            } else {
+              showErrorToast("رصيدك غير كافي لتنفيذ هذه العملية");
+            }
+          });
+
+        function getProviderName(providerValue) {
+          const providers = {
+            stc: "STC",
+            mobily: "موبايلي",
+            zain: "زين",
+            integrated: "الشركة المتحدة",
+          };
+          return providers[providerValue] || providerValue;
+        }
+      });
+    </script>
+  </body>
+</html>

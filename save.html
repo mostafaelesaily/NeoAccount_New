@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeoAccount - هدف توفير</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="logo">NeoAccount</a>
+        <div class="nav-links">
+          <a href="account.html">حسابي</a>
+          <div class="dropdown">
+            <button class="dropbtn">
+              الخدمات <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="gas.html">دفع فاتورة الغاز</a>
+              <a href="electricity.html">دفع فاتورة الكهرباء</a>
+              <a href="internet.html">دفع فاتورة الإنترنت</a>
+              <a href="transfer.html">تحويل مبلغ</a>
+              <a href="save.html" class="active">هدف توفير</a>
+            </div>
+          </div>
+          <a href="notifications.html" class="notification-icon">
+            <i class="fas fa-bell"></i>
+          </a>
+          <div class="language-switch">عربي | EN</div>
+          <label class="switch">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <h1><i class="fas fa-piggy-bank"></i> هدف توفير</h1>
+
+      <div class="service-form">
+        <form id="saving-goal-form">
+          <div class="form-group">
+            <label for="goal-name">اسم الهدف:</label>
+            <input
+              type="text"
+              id="goal-name"
+              placeholder="مثال: توفير للسيارة"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="target-amount">المبلغ المستهدف (ر.س):</label>
+            <input
+              type="number"
+              id="target-amount"
+              min="1"
+              placeholder="أدخل المبلغ المستهدف"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="saving-amount">المبلغ المراد توفيره الآن:</label>
+            <input
+              type="number"
+              id="saving-amount"
+              min="1"
+              placeholder="أدخل المبلغ"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="target-date">تاريخ الانتهاء:</label>
+            <input type="date" id="target-date" required />
+          </div>
+
+          <button type="submit" class="submit-btn">إنشاء هدف التوفير</button>
+        </form>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        setupThemeToggle();
+
+        // تعيين الحد الأدنى لتاريخ اليوم
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("target-date").min = today;
+
+        document
+          .getElementById("saving-goal-form")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const goalName = document.getElementById("goal-name").value;
+            const targetAmount = parseFloat(
+              document.getElementById("target-amount").value
+            );
+            const savingAmount = parseFloat(
+              document.getElementById("saving-amount").value
+            );
+            const targetDate = document.getElementById("target-date").value;
+
+            if (deductFromBalance(savingAmount)) {
+              addNotification(
+                `تم إنشاء هدف توفير "${goalName}" بمبلغ ${savingAmount} ر.س`,
+                "save"
+              );
+              addTransaction(`توفير لهدف ${goalName}`, -savingAmount, "saving");
+
+              const formattedDate = new Date(targetDate).toLocaleDateString(
+                "ar-SA"
+              );
+              showSuccessToast(`
+                        تم إنشاء هدف التوفير "${goalName}" بنجاح!
+                        المبلغ الأولي: ${savingAmount} ر.س
+                        المبلغ المستهدف: ${targetAmount} ر.س
+                        تاريخ الانتهاء: ${formattedDate}
+                    `);
+
+              this.reset();
+            } else {
+              showErrorToast("رصيدك غير كافي لتنفيذ هذه العملية");
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
